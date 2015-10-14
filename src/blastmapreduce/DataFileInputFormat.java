@@ -12,8 +12,6 @@ public class DataFileInputFormat extends FileInputFormat<String, String> {
     public RecordReader<String, String> createRecordReader(
             InputSplit split, TaskAttemptContext context)
             throws IOException, InterruptedException {
-
-//			context.reporter.setStatus(split.toString());
         return new FileRecordReader();
     }
 }

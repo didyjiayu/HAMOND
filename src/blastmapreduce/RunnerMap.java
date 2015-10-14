@@ -93,10 +93,6 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
         String outputDir = conf.get(DataAnalysis.OUTPUT_DIR);
         String workingDir = conf.get(DataAnalysis.WORKING_DIR);
 
-        System.out.println("the map key : " + key);
-        System.out.println("the value path : " + value);
-        System.out.println("Local DB : " + this.localDB);
-
         // We have the full file names in the value.
         String[] tmp = value.split(File.separator);
         String fileNameOnly = tmp[tmp.length - 1];// Last part should be the
