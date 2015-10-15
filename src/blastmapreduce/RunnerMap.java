@@ -83,9 +83,6 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
     public void map(String key, String value, Context context) throws IOException,
             InterruptedException {
 
-        long startTime = System.currentTimeMillis();
-        String endTime = "";
-
         Configuration conf = context.getConfiguration();
         String programDir = conf.get(DataAnalysis.PROGRAM_DIR);
         String execName = conf.get(DataAnalysis.EXECUTABLE);
@@ -116,13 +113,8 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
             outFile = stdOutFile;
         }
 
-        endTime = Double.toString(((System.currentTimeMillis() - startTime) / 1000.0));
-        System.out.println("Before running the executable Finished in " + endTime + " seconds");
-
         execCommand = this.localBlastProgram + File.separator + execName + " " + execCommand + " -db " + this.localDB;
 		//Create the external process
-
-        startTime = System.currentTimeMillis();
 
         Process p = Runtime.getRuntime().exec(execCommand);
 
@@ -134,19 +126,12 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
         errorStream.start();
 
         p.waitFor();
-        //end time of this procress
-        endTime = Double.toString(((System.currentTimeMillis() - startTime) / 1000.0));
-        System.out.println("Program Finished in " + endTime + " seconds");
 
         //Upload the results to HDFS
-        startTime = System.currentTimeMillis();
 
         Path outputDirPath = new Path(outputDir);
         Path outputFileName = new Path(outputDirPath, fileNameOnly);
         fs.copyFromLocalFile(new Path(outFile), outputFileName);
-
-        endTime = Double.toString(((System.currentTimeMillis() - startTime) / 1000.0));
-        System.out.println("Upload Result Finished in " + endTime + " seconds");
 
     }
 }
