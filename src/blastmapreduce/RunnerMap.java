@@ -10,11 +10,6 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-/**
- * @author Thilina Gunarathne (tgunarat@cs.indiana.edu)
- *
- * @editor Stephen, TAK-LON WU (taklwu@indiana.edu)
- */
 public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
 
     private String localDB = "";
@@ -24,9 +19,8 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
     public void setup(Context context) throws IOException {
         Configuration conf = context.getConfiguration();
         URI[] local = context.getCacheArchives();
-        this.localDB = local[0].getPath() + File.separator + conf.get(DataAnalysis.DB_ARCHIVE) + File.separator + conf.get(DataAnalysis.DB_NAME);
+        this.localDB = local[0].getPath();
         this.localBlastProgram = local[0].getPath();
-        //this.localBlastProgram = "/N/u/taklwu/Quarry/blast";
     }
 
     @Override
@@ -34,11 +28,9 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
             InterruptedException {
 
         Configuration conf = context.getConfiguration();
-        String programDir = conf.get(DataAnalysis.PROGRAM_DIR);
-        String execName = conf.get(DataAnalysis.EXECUTABLE);
-        String cmdArgs = conf.get(DataAnalysis.PARAMETERS);
-        String outputDir = conf.get(DataAnalysis.OUTPUT_DIR);
-        String workingDir = conf.get(DataAnalysis.WORKING_DIR);
+        String programDir = conf.get(DataAnalysis.QUERY);
+        String execName = conf.get(DataAnalysis.DATABASE);
+        String cmdArgs = conf.get(DataAnalysis.OUTPUT);
 
         // We have the full file names in the value.
         String[] tmp = value.split(File.separator);

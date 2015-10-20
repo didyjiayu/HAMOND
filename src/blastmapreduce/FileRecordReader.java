@@ -24,7 +24,6 @@ public class FileRecordReader extends RecordReader<String, String> {
 
     @Override
     public float getProgress() throws IOException {
-        System.out.println("in getProgress : " + done);
         if (done) {
             return 1.0f;
         } else {
@@ -34,14 +33,9 @@ public class FileRecordReader extends RecordReader<String, String> {
 
     @Override
     public String getCurrentKey() throws IOException, InterruptedException {
-        System.out.println("in current key " + path.toString() + " :" + done);
-		// if (done){
-        // return null;
-        // }else{
         String pathName = path.getName();
         int index = pathName.lastIndexOf("/");
         return pathName.substring(index + 1, pathName.length());
-        // }
     }
 
     @Override
