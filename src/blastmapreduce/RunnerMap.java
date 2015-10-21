@@ -41,7 +41,7 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
 
         //Upload the results to HDFS
 
-        Path outputDirPath = new Path(outputDir);
+        Path outputDirPath = new Path(output);
         Path outputFileName = new Path(outputDirPath, fileNameOnly);
         fs.copyFromLocalFile(new Path(outFile), outputFileName);
 
