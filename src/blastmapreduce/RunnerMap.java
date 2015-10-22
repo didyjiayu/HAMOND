@@ -3,6 +3,7 @@ package blastmapreduce;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -24,6 +25,7 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
             InterruptedException {
 
         Configuration conf = context.getConfiguration();
+        FileSystem fs = FileSystem.get(conf);
         String query = conf.get(DataAnalysis.QUERY);
         String output = conf.get(DataAnalysis.OUTPUT);
 
