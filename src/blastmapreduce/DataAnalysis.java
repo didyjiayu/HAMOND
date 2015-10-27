@@ -24,9 +24,9 @@ public class DataAnalysis extends Configured implements Tool {
 
     void launch(String query, String dataBase, String outPut) throws Exception {
 
-        Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "BLAST");
-
+        Job job = Job.getInstance(new Configuration(), "BLAST");
+        Configuration conf = job.getConfiguration();
+        
         // First get the file system handler, delete any previous files, add the
         // files and write the data to it, then pass its name as a parameter to
         // job
