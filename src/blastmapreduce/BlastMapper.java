@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -22,8 +23,7 @@ public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
         this.localDB = local[0].getPath();
     }
 
-    @Override
-    public void map(String key, String value, Context context) throws IOException,
+    public void map(LongWritable key, String value, Context context) throws IOException,
             InterruptedException {
 
         Configuration conf = context.getConfiguration();
