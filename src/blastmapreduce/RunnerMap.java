@@ -10,7 +10,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.util.Progressable;
 
 public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
 
@@ -40,19 +39,12 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
         if (fs.exists(new Path(output))) {
             OutputStream out = fs.append(new Path(output));
             IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
+        } else {
+            OutputStream out = fs.create(new Path(output));
+            IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
         }
 
-        OutputHandler inputStream = new OutputHandler(p.getInputStream(), "INPUT", output);
-
-        // start the stream threads.
-        inputStream.start();
-
         p.waitFor();
-
-        //Upload the results to HDFS
-        Path outputDirPath = new Path(output);
-        Path outputFileName = new Path(outputDirPath, fileNameOnly);
-        fs.copyFromLocalFile(new Path(outFile), outputFileName);
 
     }
 }
