@@ -37,7 +37,7 @@ public class BlastMapReduce extends Configured implements Tool {
         jc.set(DATABASE, dataBase);
         jc.set(OUTPUT, outPut);
 
-        job.addCacheFile(new URI(dataBase));
+        job.addCacheArchive(new URI(dataBase));
 
         FileInputFormat.setInputPaths(job, new Path(query));
         FileOutputFormat.setOutputPath(job, new Path(outPut));
