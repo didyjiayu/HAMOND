@@ -36,11 +36,11 @@ public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
 
         Process p = Runtime.getRuntime().exec(execCommand);
 
-        if (fs.exists(new Path(output))) {
-            OutputStream out = fs.append(new Path(output));
+        if (fs.exists(new Path(output + "\test.out"))) {
+            OutputStream out = fs.append(new Path(output + "\test.out"));
             IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
         } else {
-            OutputStream out = fs.create(new Path(output));
+            OutputStream out = fs.create(new Path(output + "\test.out"));
             IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
         }
 
