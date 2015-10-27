@@ -11,7 +11,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
+public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
 
     private String localDB = "";
 
@@ -28,8 +28,8 @@ public class RunnerMap extends Mapper<String, String, IntWritable, Text> {
 
         Configuration conf = context.getConfiguration();
         FileSystem fs = FileSystem.get(conf);
-        String query = conf.get(DataAnalysis.QUERY);
-        String output = conf.get(DataAnalysis.OUTPUT);
+        String query = conf.get(BlastMapReduce.QUERY);
+        String output = conf.get(BlastMapReduce.OUTPUT);
 
         String execCommand = "/usr/bin/blastp" + " -db " + this.localDB + " -num_alignments 20000 -comp_based_stats 0 -seg no -outfmt 6 -evalue 0.00001";
         //Create the external process

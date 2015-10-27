@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class DataAnalysis extends Configured implements Tool {
+public class BlastMapReduce extends Configured implements Tool {
 
     public static String QUERY = "query_sequence";
     public static String DATABASE = "database";
@@ -27,14 +27,8 @@ public class DataAnalysis extends Configured implements Tool {
         Job job = Job.getInstance(new Configuration(), "BLAST");
         Configuration conf = job.getConfiguration();
         
-        // First get the file system handler, delete any previous files, add the
-        // files and write the data to it, then pass its name as a parameter to
-        // job
-        Path hdMainDir = new Path(outPut);
         FileSystem fs = FileSystem.get(conf);
-        fs.delete(hdMainDir, true);
-
-        Path hdOutDir = new Path(hdMainDir, "out");
+        fs.delete(new Path(outPut), true);
 
         // Starting the data analysis.
         Configuration jc = job.getConfiguration();
@@ -46,10 +40,10 @@ public class DataAnalysis extends Configured implements Tool {
         job.addCacheFile(new URI(dataBase));
 
         FileInputFormat.setInputPaths(job, new Path(query));
-        FileOutputFormat.setOutputPath(job, hdOutDir);
+        FileOutputFormat.setOutputPath(job, new Path(outPut));
 
-        job.setJarByClass(DataAnalysis.class);
-        job.setMapperClass(RunnerMap.class);
+        job.setJarByClass(BlastMapReduce.class);
+        job.setMapperClass(BlastMapper.class);
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(Text.class);
 
@@ -70,7 +64,7 @@ public class DataAnalysis extends Configured implements Tool {
     }
 
     public static void main(String[] argv) throws Exception {
-        int res = ToolRunner.run(new Configuration(), new DataAnalysis(), argv);
+        int res = ToolRunner.run(new Configuration(), new BlastMapReduce(), argv);
         System.exit(res);
     }
 }
