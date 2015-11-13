@@ -30,7 +30,7 @@ public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
         String query = conf.get(BlastMapReduce.QUERY);
         String output = conf.get(BlastMapReduce.OUTPUT);
 
-        String execCommand = "/usr/bin/blastp" + " -db " + this.localDB + " -query " + query + " -num_alignments 20000 -comp_based_stats 0 -seg no -outfmt 6 -evalue 0.00001";
+        String execCommand = "test/blast/bin/blastp" + " -db " + this.localDB + " -query " + query + " -num_alignments 20000 -comp_based_stats 0 -seg no -outfmt 6 -evalue 0.00001";
         //Create the external process
 
         Process p = Runtime.getRuntime().exec(execCommand);
