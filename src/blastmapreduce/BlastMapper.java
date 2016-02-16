@@ -18,7 +18,7 @@ public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
     @Override
     public void setup(Context context) throws IOException {
         Configuration conf = context.getConfiguration();
-        URI[] local = context.getCacheArchives();
+        URI[] local = context.getCacheFiles();
         this.localDB = local[0].getPath();
     }
 
@@ -30,16 +30,16 @@ public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
         String query = conf.get(BlastMapReduce.QUERY);
         String output = conf.get(BlastMapReduce.OUTPUT);
         
-        String execCommand = "test/blast/bin/blastp" + " -db " + this.localDB + " -query " + query + " -num_alignments 20000 -comp_based_stats 0 -seg no -outfmt 6 -evalue 0.00001";
+        String execCommand = "/vol/biotools/bin/diamond blastp" + " -d " + this.localDB + " -q " + query + "-a " + output + ".daa" + " -k 20000 -evalue 0.00001";
         //Create the external process
 
         Process p = Runtime.getRuntime().exec(execCommand);
 
         if (fs.exists(new Path(output + "\test.out"))) {
-            OutputStream out = fs.append(new Path(output + "\test.out"));
+            OutputStream out = fs.append(new Path(output + ".daa"));
             IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
         } else {
-            OutputStream out = fs.create(new Path(output + "\test.out"));
+            OutputStream out = fs.create(new Path(output + ".daa"));
             IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
         }
 
