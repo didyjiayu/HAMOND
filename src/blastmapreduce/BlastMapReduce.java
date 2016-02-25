@@ -1,7 +1,6 @@
 
 package blastmapreduce;
 
-import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -19,7 +18,6 @@ public class BlastMapReduce extends Configured implements Tool {
     public static String QUERY = "query_sequence";
     public static String DATABASE = "database";
     public static String OUTPUT = "output_path";
-    public static String BASH="diamond_command";
 
     void launch(String query, String dataBase, String outPut) throws Exception {
 
@@ -37,7 +35,7 @@ public class BlastMapReduce extends Configured implements Tool {
         jc.set(DATABASE, dataBase);
         jc.set(OUTPUT, outPut);
 
-        job.addCacheFile(new URI(dataBase));
+//        job.addCacheFile(new URI(dataBase));
 
         FileInputFormat.addInputPath(job, new Path(query));
         FileOutputFormat.setOutputPath(job, new Path(outPut));
@@ -49,7 +47,6 @@ public class BlastMapReduce extends Configured implements Tool {
 //        job.setOutputValueClass(Text.class);
 
         job.setInputFormatClass(TextInputFormat.class);
-//        job.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 2);
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setNumReduceTasks(0);
 
