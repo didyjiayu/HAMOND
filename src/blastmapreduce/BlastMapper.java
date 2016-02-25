@@ -1,19 +1,17 @@
 package blastmapreduce;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.util.Shell;
 
-public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
+public class BlastMapper extends Mapper<LongWritable, Text, NullWritable, Text> {
 
-    private String localDB = "";
+    private String localDB;
 
     @Override
     public void setup(Context context) throws IOException {
@@ -21,29 +19,28 @@ public class BlastMapper extends Mapper<String, String, IntWritable, Text> {
         URI[] local = context.getCacheFiles();
         this.localDB = local[0].getPath();
     }
-
-    public void map(IntWritable key, String value, Context context) throws IOException,
+    
+    @Override
+    public void map(LongWritable key, Text value, Context context) throws IOException,
             InterruptedException {
-
+        
         Configuration conf = context.getConfiguration();
-        FileSystem fs = FileSystem.get(conf);
         String query = conf.get(BlastMapReduce.QUERY);
         String output = conf.get(BlastMapReduce.OUTPUT);
         
-        String execCommand = "/vol/biotools/bin/diamond blastp" + " -d " + this.localDB + " -q " + query + "-a " + output + ".daa" + " -k 20000 -evalue 0.00001";
+        String[] execCommand = new String[4];
+        execCommand[0] = "/vol/sge-tmp/test.sh";
+        execCommand[1] = this.localDB;
+        execCommand[2] = key.toString();
+        execCommand[3] = ">" + value.toString();
+        
         //Create the external process
-
-        Process p = Runtime.getRuntime().exec(execCommand);
-
-        if (fs.exists(new Path(output + "\test.out"))) {
-            OutputStream out = fs.append(new Path(output + ".daa"));
-            IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
-        } else {
-            OutputStream out = fs.create(new Path(output + ".daa"));
-            IOUtils.copyBytes(p.getInputStream(), out, 4096, true);
+        Shell.ShellCommandExecutor p= new Shell.ShellCommandExecutor(execCommand);
+        
+        if (value.getLength()!=0) {
+            p.execute();
+//            context.write(NullWritable.get(), new Text(this.localCommand));
         }
-
-        p.waitFor();
 
     }
 }
