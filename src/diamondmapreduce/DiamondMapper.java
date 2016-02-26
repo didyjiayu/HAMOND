@@ -1,4 +1,4 @@
-package blastmapreduce;
+package diamondmapreduce;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
@@ -8,7 +8,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.util.Shell;
 
-public class BlastMapper extends Mapper<LongWritable, Text, NullWritable, Text> {
+public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text> {
 
 //    private String localDB;
 //
@@ -24,9 +24,9 @@ public class BlastMapper extends Mapper<LongWritable, Text, NullWritable, Text> 
             InterruptedException {
         
         Configuration conf = context.getConfiguration();
-//        String query = conf.get(BlastMapReduce.QUERY);
-//        String output = conf.get(BlastMapReduce.OUTPUT);
-        String database = conf.get(BlastMapReduce.DATABASE);
+//        String query = conf.get(DiamondMapReduce.QUERY);
+//        String output = conf.get(DiamondMapReduce.OUTPUT);
+        String database = conf.get(DiamondMapReduce.DATABASE);
         
         String[] execCommand = new String[4];
         execCommand[0] = "/vol/sge-tmp/diamondCommand.sh";
