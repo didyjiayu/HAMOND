@@ -33,11 +33,14 @@ public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text
 
         String[] execCommand = new String[4];
         execCommand[0] = "/vol/sge-tmp/diamondCommand.sh";
+//        execCommand[0] = "/vol/sge-tmp/check.sh";
 //        execCommand[0] = "./test.sh";
         execCommand[1] = database;
         execCommand[2] = key.toString();
+//        execCommand[1] = key.toString();
 //        execCommand[3] = ">" + value.toString();
         execCommand[3] = value.toString();
+//        execCommand[2] = value.toString();
 
         //Create the external process
         Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);

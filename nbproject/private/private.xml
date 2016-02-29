@@ -3,6 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/yujia1986/NetBeansProjects/DiamondMapReduce/src/diamondmapreduce/NLineRecordReader.java</file>
+            <file>file:/home/yujia1986/NetBeansProjects/DiamondMapReduce/src/diamondmapreduce/CustomNLineFileInputFormat.java</file>
             <file>file:/home/yujia1986/NetBeansProjects/DiamondMapReduce/src/diamondmapreduce/DiamondMapper.java</file>
             <file>file:/home/yujia1986/NetBeansProjects/DiamondMapReduce/src/diamondmapreduce/DiamondMapReduce.java</file>
         </group>
