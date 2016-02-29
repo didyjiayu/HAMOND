@@ -21,8 +21,9 @@ public class DiamondMapReduce extends Configured implements Tool {
 
     void launch(String query, String dataBase, String outPut) throws Exception {
 
-        Job job = Job.getInstance(new Configuration(), "BLAST");
+        Job job = Job.getInstance(new Configuration(), "DIAMOND");
         Configuration conf = job.getConfiguration();
+        conf.set("mapreduce.input.fileinputformat.split.maxsize", "1024");
         conf.set("textinputformat.record.delimiter",">");
         
         FileSystem fs = FileSystem.get(conf);
