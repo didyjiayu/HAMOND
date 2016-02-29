@@ -1,5 +1,9 @@
-
 package diamondmapreduce;
+
+/**
+ *
+ * @author yujia1986
+ */
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -7,7 +11,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -21,10 +24,10 @@ public class DiamondMapReduce extends Configured implements Tool {
 
     void launch(String query, String dataBase, String outPut) throws Exception {
 
-        Job job = Job.getInstance(new Configuration(), "DIAMOND");
+        Job job = Job.getInstance(getConf(), "DIAMOND");
         Configuration conf = job.getConfiguration();
-        conf.set("mapreduce.input.fileinputformat.split.maxsize", "1024");
-        conf.set("textinputformat.record.delimiter",">");
+//        conf.set("mapreduce.input.fileinputformat.split.maxsize", "102400");
+//        conf.set("textinputformat.record.delimiter",">");
         
         FileSystem fs = FileSystem.get(conf);
         fs.delete(new Path(outPut), true);
@@ -47,7 +50,8 @@ public class DiamondMapReduce extends Configured implements Tool {
 //        job.setOutputKeyClass(NullWritable.class);
 //        job.setOutputValueClass(Text.class);
 
-        job.setInputFormatClass(TextInputFormat.class);
+//        job.setInputFormatClass(TextInputFormat.class);
+        job.setInputFormatClass(CustomNLineFileInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setNumReduceTasks(0);
 
