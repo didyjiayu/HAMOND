@@ -1,10 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package diamondmapreduce;
 
+/**
+ *
+ * @author yujia1986
+ */
 import java.io.IOException;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -19,7 +18,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
  */
 public class CustomNLineFileInputFormat extends FileInputFormat<LongWritable, Text> {
 
-    private static final long MAX_SPLIT_SIZE = 8388608;  //8MB SPLIT
+    private static final long MAX_SPLIT_SIZE = 16777216;  //8MB SPLIT
 
     @Override
     public RecordReader<LongWritable, Text> createRecordReader(

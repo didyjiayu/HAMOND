@@ -1,5 +1,9 @@
 package diamondmapreduce;
 
+/**
+ *
+ * @author yujia1986
+ */
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -13,10 +17,6 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.util.LineReader;
 
-/**
- *
- * @author yujia1986
- */
 public class NLineRecordReader extends RecordReader<LongWritable, Text> {
 
     private final int NLINESTOPROCESS = 600;
