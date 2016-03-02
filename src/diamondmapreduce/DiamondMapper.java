@@ -4,6 +4,8 @@ package diamondmapreduce;
  *
  * @author yujia1986
  */
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
@@ -31,7 +33,15 @@ public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text
 //        String output = conf.get(DiamondMapReduce.OUTPUT);
         String database = conf.get(DiamondMapReduce.DATABASE);
 
-        String[] execCommand = new String[4];
+        FileWriter file = new FileWriter("/vol/sge-tmp/yujia/input/" + key.toString());
+        try (BufferedWriter bf = new BufferedWriter(file)) {
+            bf.write(value.toString());
+            bf.close();
+        }
+//        file.write(value.toString());
+//        file.close();
+
+        String[] execCommand = new String[3];
         execCommand[0] = "/vol/sge-tmp/diamondCommand.sh";
 //        execCommand[0] = "/vol/sge-tmp/check.sh";
 //        execCommand[0] = "./test.sh";
@@ -39,7 +49,7 @@ public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text
         execCommand[2] = key.toString();
 //        execCommand[1] = key.toString();
 //        execCommand[3] = ">" + value.toString();
-        execCommand[3] = value.toString();
+//        execCommand[3] = value.toString();
 //        execCommand[2] = value.toString();
 
         //Create the external process
@@ -47,7 +57,7 @@ public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text
 
 //        context.write(NullWritable.get(), new Text(execCommand[0]+execCommand[1]+execCommand[2]+execCommand[3]));
 //        if (value.getLength() != 0) {
-            p.execute();
+        p.execute();
 //        }
 
     }
