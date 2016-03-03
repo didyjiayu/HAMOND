@@ -9,12 +9,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.util.Shell;
 
-public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text> {
+public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 //    private String localDB;
 //
@@ -29,8 +28,6 @@ public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text
             InterruptedException {
 
         Configuration conf = context.getConfiguration();
-//        String query = conf.get(DiamondMapReduce.QUERY);
-//        String output = conf.get(DiamondMapReduce.OUTPUT);
         String database = conf.get(DiamondMapReduce.DATABASE);
 
         FileWriter file = new FileWriter("/vol/sge-tmp/yujia/input/" + key.toString());
@@ -39,26 +36,19 @@ public class DiamondMapper extends Mapper<LongWritable, Text, NullWritable, Text
             bf.close();
         }
 //        file.write(value.toString());
-//        file.close();
+        file.close();
 
         String[] execCommand = new String[3];
-        execCommand[0] = "/vol/sge-tmp/diamondCommand.sh";
-//        execCommand[0] = "/vol/sge-tmp/check.sh";
-//        execCommand[0] = "./test.sh";
+        execCommand[0] = "/vol/sge-tmp/diamondAlignment.sh";
         execCommand[1] = database;
         execCommand[2] = key.toString();
-//        execCommand[1] = key.toString();
-//        execCommand[3] = ">" + value.toString();
-//        execCommand[3] = value.toString();
-//        execCommand[2] = value.toString();
 
         //Create the external process
         Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
 
-//        context.write(NullWritable.get(), new Text(execCommand[0]+execCommand[1]+execCommand[2]+execCommand[3]));
-//        if (value.getLength() != 0) {
+        context.write(new Text("keys"), new Text(key.toString()));
         p.execute();
-//        }
+        
 
     }
 }
