@@ -46,13 +46,13 @@ public class DiamondMapReduce extends Configured implements Tool {
 
         job.setJarByClass(DiamondMapReduce.class);
         job.setMapperClass(DiamondMapper.class);
-        job.setReducerClass(DiamondReducer.class);
+//        job.setReducerClass(DiamondReducer.class);
 
         job.setInputFormatClass(CustomNLineFileInputFormat.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        job.setNumReduceTasks(1);
+        job.setNumReduceTasks(0);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }

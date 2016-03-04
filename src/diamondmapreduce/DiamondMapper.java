@@ -46,7 +46,7 @@ public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
         //Create the external process
         Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
 
-        context.write(new Text("keys"), new Text(key.toString()));
+//        context.write(new Text("keys"), new Text(key.toString()));
         p.execute();
         
 
