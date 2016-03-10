@@ -1,1 +1,1 @@
-This is the test project of Blast in Hadoop.
+Use hadoop to parallel alignment tool, DIAMOND, on Giessen computational bio cluster, Lummerland.
