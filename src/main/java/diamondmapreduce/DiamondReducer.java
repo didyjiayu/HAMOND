@@ -11,6 +11,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.util.Shell;
+import org.apache.hadoop.util.Shell.ExitCodeException;
 
 /**
  *
@@ -34,7 +35,11 @@ public class DiamondReducer extends Reducer<Text, Text, Text, Text> {
         for (Text singleKey : value) {
             execCommand[2] = singleKey.toString();
             Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
-            p.execute();
+            try {
+                p.execute();
+            } catch (ExitCodeException e) {
+                System.out.println("Skipped");
+            }
         }
     }
     
