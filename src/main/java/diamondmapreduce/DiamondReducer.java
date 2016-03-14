@@ -37,6 +37,7 @@ public class DiamondReducer extends Reducer<Text, Text, Text, Text> {
             Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
             try {
                 p.execute();
+                p.close();
             } catch (ExitCodeException e) {
                 System.out.println("Skipped");
             }

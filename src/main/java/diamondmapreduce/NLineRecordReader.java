@@ -19,7 +19,7 @@ import org.apache.hadoop.util.LineReader;
 
 public class NLineRecordReader extends RecordReader<LongWritable, Text> {
 
-    private final int NLINESTOPROCESS = 80000;
+    private final int NLINESTOPROCESS = 100000;
     private LineReader in;
     private LongWritable key;
     private Text value = new Text();

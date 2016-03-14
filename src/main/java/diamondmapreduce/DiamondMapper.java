@@ -47,7 +47,8 @@ public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
         Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
 
         p.execute();
-        context.write(new Text("keys"), new Text(key.toString()));
+//        p.close();
+//        context.write(new Text("keys"), new Text(key.toString()));
 //        context.write(new Text(key.toString()), value);
         
         
