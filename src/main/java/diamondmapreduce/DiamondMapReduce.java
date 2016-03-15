@@ -28,8 +28,8 @@ public class DiamondMapReduce extends Configured implements Tool {
         Configuration conf = job.getConfiguration();
 //        conf.set("mapreduce.input.fileinputformat.split.maxsize", "102400");
 //        conf.set("textinputformat.record.delimiter",">");
-        conf.set("mapreduce.task.timeout", "18000000");
-        conf.set("mapreduce.map.memory.mb", "4096");
+        conf.set("mapreduce.task.timeout", "36000000");
+        conf.set("mapreduce.map.memory.mb", "8192");
 
         FileSystem fs = FileSystem.get(conf);
         fs.delete(new Path(outPut), true);
