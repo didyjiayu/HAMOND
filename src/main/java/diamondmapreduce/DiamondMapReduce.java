@@ -30,6 +30,7 @@ public class DiamondMapReduce extends Configured implements Tool {
 //        conf.set("textinputformat.record.delimiter",">");
         conf.set("mapreduce.task.timeout", "36000000");
         conf.set("mapreduce.map.memory.mb", "8192");
+        conf.set("mapreduce.reduce.memory.mb", "8192");
 
         FileSystem fs = FileSystem.get(conf);
         fs.delete(new Path(outPut), true);
@@ -46,13 +47,13 @@ public class DiamondMapReduce extends Configured implements Tool {
 
         job.setJarByClass(DiamondMapReduce.class);
         job.setMapperClass(DiamondMapper.class);
-//        job.setReducerClass(DiamondReducer.class);
+        job.setReducerClass(DiamondReducer.class);
 
         job.setInputFormatClass(CustomNLineFileInputFormat.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        job.setNumReduceTasks(0);
+        job.setNumReduceTasks(1);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
