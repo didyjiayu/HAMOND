@@ -50,10 +50,11 @@ public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
         execCommand[2] = key.toString();
 
         //Create the external process
-        Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
-
-        p.execute();
-        File tmpFile = new File("/vol/sge-tmp/yujia/tmp/" + key.toString()+".daa");
+        Shell.ShellCommandExecutor exec = new Shell.ShellCommandExecutor(execCommand);
+        exec.execute();
+        exec.close();
+        
+        File tmpFile = new File("/vol/sge-tmp/yujia/tmp/" + key.toString() + ".daa");
         tmpFile.setExecutable(true, false);
         tmpFile.setReadable(true, false);
         tmpFile.setWritable(true, false);
