@@ -4,6 +4,7 @@ package diamondmapreduce;
  *
  * @author yujia1986
  */
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,7 +32,7 @@ public class DiamondReducer extends Reducer<Text, Text, Text, Text> {
         String[] execCommand = new String[3];
         execCommand[0] = "/vol/sge-tmp/diamondView.sh";
         execCommand[1] = fileName;
-
+        
         for (Text singleKey : value) {
             execCommand[2] = singleKey.toString();
             Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
@@ -42,24 +43,7 @@ public class DiamondReducer extends Reducer<Text, Text, Text, Text> {
                 System.out.println("Skipped");
             }
         }
+
     }
-    
-//    public void reduce(Text key, Text value, Context context) throws IOException,
-//            InterruptedException {
-//
-//        Configuration conf = context.getConfiguration();
-//        String query = conf.get(DiamondMapReduce.QUERY);
-//        Path filePath = Paths.get(query);
-//        String fileName = filePath.getFileName().toString();
-//
-//        String[] execCommand = new String[3];
-//        execCommand[0] = "/vol/sge-tmp/diamondView.sh";
-//        execCommand[1] = fileName;
-//        execCommand[2] = key.toString();
-//        Shell.ShellCommandExecutor p = new Shell.ShellCommandExecutor(execCommand);
-//        p.execute();
-////        context.write(key, value);
-//
-//    }
 
 }
