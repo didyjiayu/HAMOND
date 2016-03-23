@@ -77,7 +77,7 @@ public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
         FileSystem fs = FileSystem.get(conf);
         //process stream copied to HDFS stream
         InputStream in = p2.getInputStream();
-        FSDataOutputStream out = fs.append(new Path(hadoopUser + "/" + query + ".out"));
+        FSDataOutputStream out = fs.create(new Path(hadoopUser + "/" + key.toString() + ".out"));
         IOUtils.copyBytes(in, out, 4096, true);
         p2.waitFor();
         

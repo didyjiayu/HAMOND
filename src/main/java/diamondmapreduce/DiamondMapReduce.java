@@ -17,7 +17,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import sidefunctions.CopyToLocal;
-import sidefunctions.CreateOutputFile;
 import sidefunctions.DeleteHDFSFiles;
 import sidefunctions.HadoopUser;
 import sidefunctions.MakeDB;
@@ -50,9 +49,6 @@ public class DiamondMapReduce extends Configured implements Tool {
         fs.copyFromLocalFile(new Path(query + ".dmnd"), new Path(userName));
         fs.copyFromLocalFile(new Path(query), new Path(userName));
         fs.copyFromLocalFile(new Path(System.getProperty("user.dir")+"/diamond"), new Path(userName));
-        
-        //create empty output file
-        CreateOutputFile.create(userName, fs, query);
         
         //close file system
         fs.close();
