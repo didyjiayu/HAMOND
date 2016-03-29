@@ -9,8 +9,8 @@ import java.io.File;
 public class DeleteIntermediateFiles {
     
     public static void deleteFiles(String key) {
-        File file1 = new File("/tmp/" + key.toString());
-        File file2 = new File("/tmp/" + key.toString()+".daa");
+        File file1 = new File("/tmp/" + key);
+        File file2 = new File("/tmp/" + key+".daa");
         file1.deleteOnExit();
         file2.deleteOnExit();
         

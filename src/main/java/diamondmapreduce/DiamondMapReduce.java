@@ -7,7 +7,6 @@ package diamondmapreduce;
 import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -16,6 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import sidefunctions.CopyFromLocal;
 import sidefunctions.CopyToLocal;
 import sidefunctions.DeleteHDFSFiles;
 import sidefunctions.HadoopUser;
@@ -28,7 +28,7 @@ public class DiamondMapReduce extends Configured implements Tool {
     public static String QUERY = "query_sequence";
     public static String DATABASE = "database";
 
-    int launch(String query) throws Exception {
+    int launch(String query, String dataBase) throws Exception {
 
         //set Hadoop configuration
         Job job = Job.getInstance(getConf(), "DIAMOND");
@@ -39,39 +39,34 @@ public class DiamondMapReduce extends Configured implements Tool {
         String userName = HadoopUser.getHadoopUser();
         
         //delete all existing DIAMOND files under current Hadoop user
-        DeleteHDFSFiles.deleteAllFiles(query);
+        DeleteHDFSFiles.deleteAllFiles(userName);
 
         //make DIAMOND database on local then copy to HDFS with query and delete local database
-        MakeDB.makeDB(System.getProperty("user.dir")+"/diamond", query);
+        MakeDB.makeDB(System.getProperty("user.dir")+"/diamond", dataBase);
         
         //copy DIAMOND bin, query and local database file to HDFS
-        FileSystem fs = FileSystem.get(conf);
-        fs.copyFromLocalFile(new Path(query + ".dmnd"), new Path(userName));
-        fs.copyFromLocalFile(new Path(query), new Path(userName));
-        fs.copyFromLocalFile(new Path(System.getProperty("user.dir")+"/diamond"), new Path(userName));
-        
-        //close file system
-        fs.close();
+        CopyFromLocal.copyFromLocal(conf, query, userName);
         
         //remove local database file
         RemoveDB.removeDB(query + ".dmnd");
 
         //pass query name and database name to mappers
         conf.set(QUERY, query);
-        conf.set(DATABASE, query + ".dmnd");
+        conf.set(DATABASE, dataBase + ".dmnd");
 
         //add DIAMOND bin and database into distributed cache
         job.addCacheFile(new URI(userName + "/diamond"));
-        job.addCacheFile(new URI(userName + "/" + query + ".dmnd"));
+        job.addCacheFile(new URI(userName + "/" + dataBase + ".dmnd"));
 
-        //start Hadoop DIAMOND MapReduce
+        //set job input and output paths
         FileInputFormat.addInputPath(job, new Path(userName + "/" + query));
         FileOutputFormat.setOutputPath(job, new Path(userName + "/output"));
 
+        //set job driver and mapper
         job.setJarByClass(DiamondMapReduce.class);
         job.setMapperClass(DiamondMapper.class);
-//        job.setReducerClass(DiamondReducer.class);
 
+        //set job input format into customized multilines format
         job.setInputFormatClass(CustomNLineFileInputFormat.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
@@ -86,7 +81,8 @@ public class DiamondMapReduce extends Configured implements Tool {
     @Override
     public int run(String[] args) throws Exception {
         String q = args[0];
-        int status = launch(q);
+        String db = args[1];
+        int status = launch(q, db);
         CopyToLocal.copyToLocal(q);
         DeleteHDFSFiles.deleteAllFiles(q);
         return status;
