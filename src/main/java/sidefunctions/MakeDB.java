@@ -9,10 +9,12 @@ import java.io.IOException;
  */
 public class MakeDB {
 
-    public static void makeDB(String diamond, String query) throws IOException, InterruptedException {
-        String command[] = {diamond, "makedb", "--in", query, "-d", query};
+    public static void makeDB(String diamond, String dataBase) throws IOException, InterruptedException {
+        
+        String command[] = {diamond, "makedb", "--in", dataBase, "-d", dataBase};
         Process p = Runtime.getRuntime().exec(command);
         p.waitFor();
+        
     }
 
 }

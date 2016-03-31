@@ -28,7 +28,7 @@ public class DiamondMapReduce extends Configured implements Tool {
     public static String QUERY = "query_sequence";
     public static String DATABASE = "database";
 
-    int launch(String query, String dataBase) throws Exception {
+    int launch(String diamond, String query, String dataBase, String outPut) throws Exception {
 
         //set Hadoop configuration
         Job job = Job.getInstance(getConf(), "DIAMOND");
@@ -42,13 +42,14 @@ public class DiamondMapReduce extends Configured implements Tool {
         DeleteHDFSFiles.deleteAllFiles(userName);
 
         //make DIAMOND database on local then copy to HDFS with query and delete local database
-        MakeDB.makeDB(System.getProperty("user.dir")+"/diamond", dataBase);
+//        MakeDB.makeDB(System.getProperty("user.dir")+"/diamond", dataBase);
+        MakeDB.makeDB(diamond, dataBase);
         
         //copy DIAMOND bin, query and local database file to HDFS
-        CopyFromLocal.copyFromLocal(conf, query, userName);
+        CopyFromLocal.copyFromLocal(conf, diamond, query, dataBase, userName);
         
         //remove local database file
-        RemoveDB.removeDB(query + ".dmnd");
+        RemoveDB.removeDB(dataBase + ".dmnd");
 
         //pass query name and database name to mappers
         conf.set(QUERY, query);
@@ -56,10 +57,10 @@ public class DiamondMapReduce extends Configured implements Tool {
 
         //add DIAMOND bin and database into distributed cache
         job.addCacheFile(new URI(userName + "/diamond"));
-        job.addCacheFile(new URI(userName + "/" + dataBase + ".dmnd"));
+        job.addCacheFile(new URI(userName + "/" + new Path(dataBase).getName() + ".dmnd"));
 
         //set job input and output paths
-        FileInputFormat.addInputPath(job, new Path(userName + "/" + query));
+        FileInputFormat.addInputPath(job, new Path(userName + "/" + new Path(query).getName()));
         FileOutputFormat.setOutputPath(job, new Path(userName + "/output"));
 
         //set job driver and mapper
@@ -80,10 +81,12 @@ public class DiamondMapReduce extends Configured implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
-        String q = args[0];
-        String db = args[1];
-        int status = launch(q, db);
-        CopyToLocal.copyToLocal(q);
+        String dmd = args[0];
+        String q = args[1];
+        String db = args[2];
+        String op = args[3];
+        int status = launch(dmd, q, db, op);
+        CopyToLocal.copyToLocal(op);
         DeleteHDFSFiles.deleteAllFiles(q);
         return status;
     }
