@@ -15,8 +15,8 @@ public class SetConf {
 
     public static void setHadoopConf(Configuration conf) {
         conf.set("mapreduce.task.timeout", "36000000");
-        conf.set("mapreduce.map.memory.mb", "8192");
-        conf.set("mapreduce.reduce.memory.mb", "8192");
+        conf.set("mapreduce.map.memory.mb", "4096");
+        conf.set("mapreduce.reduce.memory.mb", "4096");
     }
 
 }

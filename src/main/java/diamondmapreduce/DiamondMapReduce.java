@@ -20,6 +20,7 @@ import sidefunctions.CopyToLocal;
 import sidefunctions.DeleteHDFSFiles;
 import sidefunctions.HadoopUser;
 import sidefunctions.MakeDB;
+import sidefunctions.MakeHamondDir;
 import sidefunctions.RemoveDB;
 import sidefunctions.SetConf;
 
@@ -27,6 +28,7 @@ public class DiamondMapReduce extends Configured implements Tool {
 
     public static String QUERY = "query_sequence";
     public static String DATABASE = "database";
+    public static String userName;
 
     int launch(String diamond, String query, String dataBase, String outPut) throws Exception {
 
@@ -36,10 +38,13 @@ public class DiamondMapReduce extends Configured implements Tool {
         SetConf.setHadoopConf(conf);
 
         //get user name
-        String userName = HadoopUser.getHadoopUser();
+        userName = HadoopUser.getHadoopUser();
         
         //delete all existing DIAMOND files under current Hadoop user
         DeleteHDFSFiles.deleteAllFiles(userName);
+        
+        //make Hamond directory on HDFS
+        MakeHamondDir.makedir(conf, userName);
 
         //make DIAMOND database on local then copy to HDFS with query and delete local database
 //        MakeDB.makeDB(System.getProperty("user.dir")+"/diamond", dataBase);
@@ -56,12 +61,12 @@ public class DiamondMapReduce extends Configured implements Tool {
         conf.set(DATABASE, dataBase + ".dmnd");
 
         //add DIAMOND bin and database into distributed cache
-        job.addCacheFile(new URI(userName + "/diamond"));
-        job.addCacheFile(new URI(userName + "/" + new Path(dataBase).getName() + ".dmnd"));
+        job.addCacheFile(new URI("/user/"+userName+"/Hamond/diamond"));
+        job.addCacheFile(new URI("/user/"+userName+"/Hamond/" + new Path(dataBase).getName() + ".dmnd"));
 
         //set job input and output paths
-        FileInputFormat.addInputPath(job, new Path(userName + "/" + new Path(query).getName()));
-        FileOutputFormat.setOutputPath(job, new Path(userName + "/output"));
+        FileInputFormat.addInputPath(job, new Path("/user/"+userName + "/Hamond/" + new Path(query).getName()));
+        FileOutputFormat.setOutputPath(job, new Path("/user/"+userName + "/Hamond/output"));
 
         //set job driver and mapper
         job.setJarByClass(DiamondMapReduce.class);
@@ -87,7 +92,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         String op = args[3];
         int status = launch(dmd, q, db, op);
         CopyToLocal.copyToLocal(op);
-        DeleteHDFSFiles.deleteAllFiles(q);
+        DeleteHDFSFiles.deleteAllFiles(userName);
         return status;
     }
 
