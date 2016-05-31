@@ -1,6 +1,8 @@
 package sidefunctions;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -8,9 +10,12 @@ import java.io.IOException;
  */
 public class DiamondAlignment {
 
-    public static void align(String diamond, String localDB, String key) throws IOException, InterruptedException {
-        String alignment[] = {diamond, "blastp", "-q", "/tmp/" + key, "-d", localDB, "-a", "/tmp/" + key, "--seg", "no", "--sensitive", "-k", "30000", "-e", "0.00001"};
-        Process p1 = Runtime.getRuntime().exec(alignment);
+    public static void align(String diamond, String localDB, String key, String[] arguments) throws IOException, InterruptedException {
+        ArrayList<String> argumentsList = new ArrayList<String>(Arrays.asList(arguments));
+        String qda[] = {"-q", "/tmp/" + key, "-d", localDB, "-a", "/tmp/" + key};
+        argumentsList.add(0, diamond);
+        argumentsList.addAll(new ArrayList<String>(Arrays.asList(qda)));
+        Process p1 = Runtime.getRuntime().exec(argumentsList.toArray(new String[argumentsList.size()]));
         p1.waitFor();
     }
 

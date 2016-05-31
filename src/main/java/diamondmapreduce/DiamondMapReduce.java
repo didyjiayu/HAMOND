@@ -5,6 +5,8 @@ package diamondmapreduce;
  * @author yujia1986
  */
 import java.net.URI;
+import java.util.Arrays;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -15,6 +17,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import sidefunctions.CheckArguments;
 import sidefunctions.CopyFromLocal;
 import sidefunctions.CopyToLocal;
 import sidefunctions.DeleteHDFSFiles;
@@ -26,11 +29,17 @@ import sidefunctions.SetConf;
 
 public class DiamondMapReduce extends Configured implements Tool {
 
-    public static String QUERY = "query_sequence";
-    public static String DATABASE = "database";
+    public static String QUERY="query";
+    public static String DATABASE="reference";
     public static String userName;
 
-    int launch(String diamond, String query, String dataBase, String outPut) throws Exception {
+    int launch(String[] arguments) throws Exception {
+        
+        //extract diamond, query, reference and output from array
+        String diamond = arguments[0];
+        String query = arguments[1];
+        String dataBase = arguments[2];
+        String outPut = arguments[3];
 
         //set Hadoop configuration
         Job job = Job.getInstance(getConf(), "DIAMOND");
@@ -59,6 +68,8 @@ public class DiamondMapReduce extends Configured implements Tool {
         //pass query name and database name to mappers
         conf.set(QUERY, query);
         conf.set(DATABASE, dataBase + ".dmnd");
+        String[] subArgs = Arrays.copyOfRange(arguments, 4, arguments.length);
+        conf.setStrings("DIAMOND-arguments", subArgs);
 
         //add DIAMOND bin and database into distributed cache
         job.addCacheFile(new URI("/user/"+userName+"/Hamond/diamond"));
@@ -86,12 +97,9 @@ public class DiamondMapReduce extends Configured implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
-        String dmd = args[0];
-        String q = args[1];
-        String db = args[2];
-        String op = args[3];
-        int status = launch(dmd, q, db, op);
-        CopyToLocal.copyToLocal(op);
+        CheckArguments.check(args);
+        int status = launch(args);
+        CopyToLocal.copyToLocal(args[3]);
         DeleteHDFSFiles.deleteAllFiles(userName);
         return status;
     }
