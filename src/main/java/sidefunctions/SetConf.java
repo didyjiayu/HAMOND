@@ -6,6 +6,8 @@
 package sidefunctions;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,6 +19,8 @@ public class SetConf {
         conf.set("mapreduce.task.timeout", "36000000");
         conf.set("mapreduce.map.memory.mb", "4096");
         conf.set("mapreduce.reduce.memory.mb", "4096");
+        Logger.getLogger("amazon.emr.metrics").setLevel(Level.OFF);
+
     }
 
 }

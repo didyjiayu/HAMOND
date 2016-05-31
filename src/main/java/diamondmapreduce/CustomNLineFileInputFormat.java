@@ -19,6 +19,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 public class CustomNLineFileInputFormat extends FileInputFormat<LongWritable, Text> {
 
 //    private static final long MAX_SPLIT_SIZE = 16777216;  //16MB SPLIT
+//    private static final long MAX_SPLIT_SIZE = 2097152;  //2MB SPLIT
     private static final long MAX_SPLIT_SIZE = 8388608;  //8MB SPLIT
 //    private static final long MAX_SPLIT_SIZE = 33554432; //32MB SPLIT
 //    private static final long MAX_SPLIT_SIZE = 67108864; //64MB SPLIT
