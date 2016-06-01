@@ -17,8 +17,8 @@ public class SetConf {
 
     public static void setHadoopConf(Configuration conf) {
         conf.set("mapreduce.task.timeout", "36000000");
-        conf.set("mapreduce.map.memory.mb", "4096");
-        conf.set("mapreduce.reduce.memory.mb", "4096");
+        conf.set("mapreduce.map.memory.mb", "5632");
+        conf.set("mapreduce.reduce.memory.mb", "5632");
         Logger.getLogger("amazon.emr.metrics").setLevel(Level.OFF);
 
     }
