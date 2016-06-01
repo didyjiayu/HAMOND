@@ -99,7 +99,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         CheckArguments.check(args);
         int status = launch(args);
         CopyToLocal.copyToLocal(args[3]);
-//        DeleteHDFSFiles.deleteAllFiles(userName);
+        DeleteHDFSFiles.deleteAllFiles(userName);
         return status;
     }
 
