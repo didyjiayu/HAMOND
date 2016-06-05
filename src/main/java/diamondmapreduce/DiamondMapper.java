@@ -10,10 +10,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import sidefunctions.DiamondAlignment;
-import sidefunctions.DeleteIntermediateFiles;
-import sidefunctions.DiamondView;
-import sidefunctions.WriteKeyValueToTemp;
+import hamondsidefunctions.DiamondAlignment;
+import hamondsidefunctions.DeleteIntermediateFiles;
+import hamondsidefunctions.DiamondView;
+import hamondsidefunctions.WriteKeyValueToTemp;
 
 public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
 

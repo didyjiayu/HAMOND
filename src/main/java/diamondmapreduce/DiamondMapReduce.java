@@ -16,24 +16,17 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import sidefunctions.CheckArguments;
-import sidefunctions.CopyFromLocal;
-import sidefunctions.CopyToLocal;
-import sidefunctions.DeleteHDFSFiles;
-import sidefunctions.HadoopUser;
-import sidefunctions.MakeDB;
-import sidefunctions.MakeHamondDir;
-import sidefunctions.RemoveDB;
-import sidefunctions.SetConf;
+import hamondsidefunctions.CheckArguments;
 
 public class DiamondMapReduce extends Configured implements Tool {
 
-    public static String QUERY="query";
-    public static String DATABASE="reference";
+    public static String QUERY = "query";
+    public static String DATABASE = "reference";
+    public static String OUTPUT = "output";
     public static String userName;
 
-    int launch(String[] arguments) throws Exception {
-        
+    int launchHamond(String[] arguments) throws Exception {
+
         //extract diamond, query, reference and output from array
         String diamond = arguments[0];
         String query = arguments[1];
@@ -43,26 +36,25 @@ public class DiamondMapReduce extends Configured implements Tool {
         //set Hadoop configuration
         Job job = Job.getInstance(getConf(), "DIAMOND");
         Configuration conf = job.getConfiguration();
-        SetConf.setHadoopConf(conf);
+        hamondsidefunctions.SetConf.setHadoopConf(conf);
 
         //get user name
-        userName = HadoopUser.getHadoopUser();
-        
+        userName = hamondsidefunctions.HadoopUser.getHadoopUser();
+
         //delete all existing DIAMOND files under current Hadoop user
-        DeleteHDFSFiles.deleteAllFiles(userName);
-        
+        hamondsidefunctions.DeleteHDFSFiles.deleteAllFiles(userName);
+
         //make Hamond directory on HDFS
-        MakeHamondDir.makedir(conf, userName);
+        hamondsidefunctions.MakeHamondDir.makedir(conf, userName);
 
         //make DIAMOND database on local then copy to HDFS with query and delete local database
-//        MakeDB.makeDB(System.getProperty("user.dir")+"/diamond", dataBase);
-        MakeDB.makeDB(diamond, dataBase);
-        
+        hamondsidefunctions.MakeDB.makeDB(diamond, dataBase);
+
         //copy DIAMOND bin, query and local database file to HDFS
-        CopyFromLocal.copyFromLocal(conf, diamond, query, dataBase, userName);
-        
+        hamondsidefunctions.CopyFromLocal.copyFromLocal(conf, diamond, query, dataBase, userName);
+
         //remove local database file
-        RemoveDB.removeDB(dataBase + ".dmnd");
+        hamondsidefunctions.RemoveDB.removeDB(dataBase + ".dmnd");
 
         //pass query name and database name to mappers
         conf.set(QUERY, query);
@@ -71,12 +63,12 @@ public class DiamondMapReduce extends Configured implements Tool {
         conf.setStrings("DIAMOND-arguments", subArgs);
 
         //add DIAMOND bin and database into distributed cache
-        job.addCacheFile(new URI("/user/"+userName+"/Hamond/diamond"));
-        job.addCacheFile(new URI("/user/"+userName+"/Hamond/" + new Path(dataBase).getName() + ".dmnd"));
+        job.addCacheFile(new URI("/user/" + userName + "/Hamond/diamond"));
+        job.addCacheFile(new URI("/user/" + userName + "/Hamond/" + new Path(dataBase).getName() + ".dmnd"));
 
         //set job input and output paths
-        FileInputFormat.addInputPath(job, new Path("/user/"+userName + "/Hamond/" + new Path(query).getName()));
-        FileOutputFormat.setOutputPath(job, new Path("/user/"+userName + "/Hamond/output"));
+        FileInputFormat.addInputPath(job, new Path("/user/" + userName + "/Hamond/" + new Path(query).getName()));
+        FileOutputFormat.setOutputPath(job, new Path("/user/" + userName + "/Hamond/output"));
 
         //set job driver and mapper
         job.setJarByClass(DiamondMapReduce.class);
@@ -89,17 +81,83 @@ public class DiamondMapReduce extends Configured implements Tool {
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setNumReduceTasks(0);
         job.setSpeculativeExecution(false);
-        
+
         return job.waitForCompletion(true) ? 0 : 1;
+
+    }
+    
+    int launchHamondAWS(String[] arguments) throws Exception {
+
+        //extract diamond, query, reference and output from array
+        String diamond = arguments[0];
+        String query = arguments[1];
+        String dataBase = arguments[2];
+        String outPut = arguments[3];
+
+        //set Hadoop configuration
+        Job job = Job.getInstance(getConf(), "DIAMOND");
+        Configuration conf = job.getConfiguration();
+        awshamondsidefunctions.SetConf.setHadoopConf(conf);
+
+        //get user name
+        userName = awshamondsidefunctions.HadoopUser.getHadoopUser();
+
+        //copy DIAMOND, query, reference from S3 to master local
+        awshamondsidefunctions.CopyFromS3.copyFromS3(diamond, query, dataBase);
+
+        //make Hamond directory on HDFS
+        awshamondsidefunctions.MakeHamondDir.makedir(conf);
+
+        //make DIAMOND database on local then copy to HDFS with query and delete local database
+        awshamondsidefunctions.MakeDB.makeDB("/mnt/diamond", "/mnt/" + new Path(dataBase).getName());
         
+        //copy DIAMOND bin, query and local database file to HDFS
+        awshamondsidefunctions.CopyFromLocal.copyFromLocal(conf, "/mnt/diamond", "/mnt/" + new Path(query).getName(), "/mnt/" + new Path(dataBase).getName());
+
+        //pass query name and database name to mappers
+        conf.set(QUERY, query);
+        conf.set(DATABASE, dataBase);
+        conf.set(OUTPUT, outPut);
+        String[] subArgs = Arrays.copyOfRange(arguments, 4, arguments.length);
+        conf.setStrings("DIAMOND-arguments", subArgs);
+
+        //add DIAMOND bin and database into distributed cache
+        job.addCacheFile(new URI("Hamond/diamond"));
+        job.addCacheFile(new URI("Hamond/" + new Path(dataBase).getName() + ".dmnd"));
+
+        //set job input and output paths
+        FileInputFormat.addInputPath(job, new Path(query));
+        FileOutputFormat.setOutputPath(job, new Path("output"));
+
+        //set job driver and mapper
+        job.setJarByClass(DiamondMapReduce.class);
+        job.setMapperClass(DiamondMapper.class);
+
+        //set job input format into customized multilines format
+        job.setInputFormatClass(CustomNLineFileInputFormat.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
+        job.setNumReduceTasks(0);
+        job.setSpeculativeExecution(false);
+
+        return job.waitForCompletion(true) ? 0 : 1;
+
     }
 
     @Override
     public int run(String[] args) throws Exception {
         CheckArguments.check(args);
-        int status = launch(args);
-        CopyToLocal.copyToLocal(args[3]);
-        DeleteHDFSFiles.deleteAllFiles(userName);
+        //check whether to invoke regular Hamond or HamondAWS
+        int status = 100;
+        if (!args[0].contains("s3")) {
+            status = launchHamond(args);
+            hamondsidefunctions.CopyToLocal.copyToLocal(args[3]);
+            hamondsidefunctions.DeleteHDFSFiles.deleteAllFiles(userName);
+        } else if (args[0].contains("s3")) {
+            status = launchHamondAWS(args);
+            awshamondsidefunctions.CopyToS3.copyToS3(args[3]);
+        }
         return status;
     }
 

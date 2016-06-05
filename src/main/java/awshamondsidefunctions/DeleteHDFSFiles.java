@@ -1,4 +1,4 @@
-package sidefunctions;
+package awshamondsidefunctions;
 
 import java.io.IOException;
 

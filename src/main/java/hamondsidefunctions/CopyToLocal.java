@@ -1,4 +1,4 @@
-package sidefunctions;
+package hamondsidefunctions;
 
 import java.io.IOException;
 

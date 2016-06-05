@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sidefunctions;
+package awshamondsidefunctions;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.log4j.Level;

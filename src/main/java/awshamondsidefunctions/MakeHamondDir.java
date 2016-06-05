@@ -1,4 +1,4 @@
-package sidefunctions;
+package awshamondsidefunctions;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
@@ -10,9 +10,9 @@ import org.apache.hadoop.fs.Path;
  * @author yujia1986
  */
 public class MakeHamondDir {
-    public static void makedir(Configuration conf, String userName) throws IOException {
+    public static void makedir(Configuration conf) throws IOException {
         FileSystem fs = FileSystem.get(conf);
-        Path p = new Path("/user/"+userName+"/Hamond");
+        Path p = new Path("Hamond");
         if (fs.exists(p)) {
             fs.delete(p, true);
         }

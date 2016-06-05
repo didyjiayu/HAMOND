@@ -1,4 +1,4 @@
-package sidefunctions;
+package hamondsidefunctions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
