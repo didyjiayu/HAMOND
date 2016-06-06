@@ -16,7 +16,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import hamondsidefunctions.CheckArguments;
+import sharedsidefunctions.CheckArguments;
+import sharedsidefunctions.HadoopUser;
+import sharedsidefunctions.MakeDB;
+import sharedsidefunctions.RemoveDB;
 
 public class DiamondMapReduce extends Configured implements Tool {
 
@@ -39,7 +42,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         hamondsidefunctions.SetConf.setHadoopConf(conf);
 
         //get user name
-        userName = hamondsidefunctions.HadoopUser.getHadoopUser();
+        userName = HadoopUser.getHadoopUser();
 
         //delete all existing DIAMOND files under current Hadoop user
         hamondsidefunctions.DeleteHDFSFiles.deleteAllFiles(userName);
@@ -48,13 +51,13 @@ public class DiamondMapReduce extends Configured implements Tool {
         hamondsidefunctions.MakeHamondDir.makedir(conf, userName);
 
         //make DIAMOND database on local then copy to HDFS with query and delete local database
-        hamondsidefunctions.MakeDB.makeDB(diamond, dataBase);
+        MakeDB.makeDB(diamond, dataBase);
 
         //copy DIAMOND bin, query and local database file to HDFS
         hamondsidefunctions.CopyFromLocal.copyFromLocal(conf, diamond, query, dataBase, userName);
 
         //remove local database file
-        hamondsidefunctions.RemoveDB.removeDB(dataBase + ".dmnd");
+        RemoveDB.removeDB(dataBase + ".dmnd");
 
         //pass query name and database name to mappers
         conf.set(QUERY, query);
@@ -100,7 +103,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         awshamondsidefunctions.SetConf.setHadoopConf(conf);
 
         //get user name
-        userName = awshamondsidefunctions.HadoopUser.getHadoopUser();
+        userName = HadoopUser.getHadoopUser();
 
         //copy DIAMOND, query, reference from S3 to master local
         awshamondsidefunctions.CopyFromS3.copyFromS3(diamond, query, dataBase);
@@ -109,7 +112,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         awshamondsidefunctions.MakeHamondDir.makedir(conf);
 
         //make DIAMOND database on local then copy to HDFS with query and delete local database
-        awshamondsidefunctions.MakeDB.makeDB("/mnt/diamond", "/mnt/" + new Path(dataBase).getName());
+        MakeDB.makeDB("/mnt/diamond", "/mnt/" + new Path(dataBase).getName());
         
         //copy DIAMOND bin, query and local database file to HDFS
         awshamondsidefunctions.CopyFromLocal.copyFromLocal(conf, "/mnt/diamond", "/mnt/" + new Path(query).getName(), "/mnt/" + new Path(dataBase).getName());

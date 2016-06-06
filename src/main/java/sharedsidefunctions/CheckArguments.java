@@ -1,4 +1,4 @@
-package hamondsidefunctions;
+package sharedsidefunctions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public class CheckArguments {
             throw new IllegalArgumentException("You have to first give the path of DIAMOND!");
         }
         
-        if(!argumentsList.get(1).contains(".faa")||!argumentsList.get(2).contains(".faa")) {
+        if(!argumentsList.get(1).contains(".f")||!argumentsList.get(2).contains(".f")) {
             throw new IllegalArgumentException("You have to give query and reference genome!");
         }
         

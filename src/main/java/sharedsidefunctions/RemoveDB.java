@@ -1,4 +1,4 @@
-package awshamondsidefunctions;
+package sharedsidefunctions;
 
 import java.io.File;
 

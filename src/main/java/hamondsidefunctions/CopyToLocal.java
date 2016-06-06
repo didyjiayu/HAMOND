@@ -1,5 +1,6 @@
 package hamondsidefunctions;
 
+import sharedsidefunctions.HadoopUser;
 import java.io.IOException;
 
 /**

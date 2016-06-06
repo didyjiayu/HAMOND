@@ -1,4 +1,4 @@
-package hamondsidefunctions;
+package sharedsidefunctions;
 
 import java.io.IOException;
 import java.util.ArrayList;

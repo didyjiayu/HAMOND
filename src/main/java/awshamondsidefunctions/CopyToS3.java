@@ -1,6 +1,8 @@
 package awshamondsidefunctions;
 
 import java.io.IOException;
+import org.apache.hadoop.fs.Path;
+import sharedsidefunctions.HadoopUser;
 
 /**
  *
@@ -11,6 +13,11 @@ public class CopyToS3 {
     public static void copyToS3(String outPut) throws IOException, InterruptedException {
 
         String userName = HadoopUser.getHadoopUser();
+        //get output file name
+        String outputName = new Path(outPut).getName();
+        Path outputPath = new Path(outPut).getParent();
+        
+        
 //        String copyCommand[] = {"hadoop", "fs", "-getmerge", userName+"/*.out", System.getProperty("user.dir")+"/"+query+".out"};
 //        String copyCommand1[] = {"hadoop", "fs", "-getmerge", "Hamond/*.out", "/mnt/Hamond.out"};
 //        Process p1 = Runtime.getRuntime().exec(copyCommand1);
@@ -20,11 +27,13 @@ public class CopyToS3 {
 //        Process p2 = Runtime.getRuntime().exec(copyCommand2);
 //        p2.waitFor();
 
-        String copyCommand1[] = {"bash", "-c", "hadoop fs -text Hamond/*.out | hadoop fs -put - Hamond/Hamond.out"};
+        //use stream merge all output files back into a single outpuf file in HDFS
+        String copyCommand1[] = {"bash", "-c", "hadoop fs -text Hamond/*.out | hadoop fs -put - Hamond/"+outputName};
         Process p1 = Runtime.getRuntime().exec(copyCommand1);
         p1.waitFor();
         
-        String copyCommand2[] = {"hadoop", "distcp", "Hamond/Hamond.out", outPut};
+        //mapreduce single output file back to s3 using user specified output file name
+        String copyCommand2[] = {"hadoop", "distcp", "Hamond/"+outputName, outputPath.toString()};
         Process p2 = Runtime.getRuntime().exec(copyCommand2);
         p2.waitFor();
         
