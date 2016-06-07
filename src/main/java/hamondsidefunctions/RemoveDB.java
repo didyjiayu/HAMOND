@@ -13,21 +13,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package hamondsidefunctions;
 
-import java.io.IOException;
+import java.io.File;
 
 /**
  *
  * @author yujia1986
  */
-public class DeleteHDFSFiles {
-
-    public static void deleteAllFiles(String userName) throws IOException, InterruptedException {
-        
-        String[] deleteFiles = {"hadoop", "fs", "-rm", "-r", "/user/"+userName+"/Hamond"};
-        Process delete = Runtime.getRuntime().exec(deleteFiles);
-        delete.waitFor();
+public class RemoveDB {
+    
+    public static void removeDB (String db) {
+        File file = new File(db);
+        file.deleteOnExit();
     }
-
+    
 }

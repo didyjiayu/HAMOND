@@ -13,25 +13,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package awshamondsidefunctions;
 
+import java.io.File;
 import java.io.IOException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.commons.io.FileUtils;
 
 /**
  * 
  * @author yujia1986
  */
 public class MakeHamondDir {
-    public static void makedir(Configuration conf) throws IOException {
-        FileSystem fs = FileSystem.get(conf);
-        Path p = new Path("Hamond");
-        if (fs.exists(p)) {
-            fs.delete(p, true);
+    
+    public static void make() throws IOException{
+        File dir = new File("/mnt/Hamond");
+        if (dir.exists()) {
+            FileUtils.deleteDirectory(dir);
         }
-        fs.mkdirs(p);
-        fs.close();
+        dir.mkdir();
     }
+
 }

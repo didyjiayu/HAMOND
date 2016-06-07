@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package awshamondsidefunctions;
 
 import java.io.File;
@@ -25,19 +26,19 @@ import java.io.IOException;
 public class CopyFromS3 {
 
     public static void copyFromS3(String diamond, String query, String dataBase) throws IOException, InterruptedException {
-        String copyCommand1[] = {"aws", "s3", "cp", diamond, "/mnt/"};
+        String copyCommand1[] = {"aws", "s3", "cp", diamond, "/mnt/Hamond"};
         Process p1 = Runtime.getRuntime().exec(copyCommand1);
         p1.waitFor();
 
-        String copyCommand2[] = {"aws", "s3", "cp", query, "/mnt/"};
+        String copyCommand2[] = {"aws", "s3", "cp", query, "/mnt/Hamond"};
         Process p2 = Runtime.getRuntime().exec(copyCommand2);
         p2.waitFor();
 
-        String copyCommand3[] = {"aws", "s3", "cp", dataBase, "/mnt/"};
+        String copyCommand3[] = {"aws", "s3", "cp", dataBase, "/mnt/Hamond"};
         Process p3 = Runtime.getRuntime().exec(copyCommand3);
         p3.waitFor();
         
-        File file = new File("/mnt/diamond");
+        File file = new File("/mnt/Hamond/diamond");
         file.setReadable(true, false);
         file.setExecutable(true, false);
         file.setWritable(true, false);

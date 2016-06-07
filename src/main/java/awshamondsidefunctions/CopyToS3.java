@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package awshamondsidefunctions;
 
 import java.io.IOException;
@@ -43,12 +44,12 @@ public class CopyToS3 {
 //        p2.waitFor();
 
         //use stream merge all output files back into a single outpuf file in HDFS
-        String copyCommand1[] = {"bash", "-c", "hadoop fs -text Hamond/*.out | hadoop fs -put - Hamond/"+outputName};
+        String copyCommand1[] = {"bash", "-c", "hadoop fs -text /user/"+userName+"/Hamond/*.out | hadoop fs -put - /user/"+userName+"/Hamond/"+outputName};
         Process p1 = Runtime.getRuntime().exec(copyCommand1);
         p1.waitFor();
         
         //mapreduce single output file back to s3 using user specified output file name
-        String copyCommand2[] = {"hadoop", "distcp", "Hamond/"+outputName, outputPath.toString()};
+        String copyCommand2[] = {"hadoop", "distcp", "/user/"+userName+"/Hamond/"+outputName, outputPath.toString()};
         Process p2 = Runtime.getRuntime().exec(copyCommand2);
         p2.waitFor();
         
