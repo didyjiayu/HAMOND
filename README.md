@@ -5,9 +5,9 @@ Hamond is an implementation of speedup DIAMOND in parallel by using Apache Hadoo
   - It has high failure tolerance, availability and scalability
   - It's faster than single PC DIAMOND in dealing with large size genomes
   - It accepts all DIAMOND alignment options
-  - It can run either on an in-house Hadoop cluster or on Amazon Web Service
+  - It can run either on an in-house Hadoop cluster or on [Amazon Web Service](https://aws.amazon.com/ "AWS")
 
-[DIAMOND] is an alignment tool:
+[DIAMOND](https://github.com/bbuchfink/diamond "DIAMOND") is an alignment tool:
 
 > DIAMOND is a BLAST-compatible local aligner for mapping protein and translated DNA query sequences against a protein reference database (BLASTP and BLASTX alignment mode). The speedup over BLAST is up to 20,000 on short reads at a typical sensitivity of 90-99% relative to BLAST depending on the data and settings.
 
@@ -24,8 +24,8 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
     - Java environment 1.7 or high
     
   - Amazon Web Service
-    - Elastic Map Reduce Service
-    - An S3 bucket
+    - [Elastic Map Reduce](https://aws.amazon.com/elasticmapreduce/ "EMR") service
+    - An [S3](https://aws.amazon.com/s3/ "S3") bucket
 
 You need Gulp installed globally:
 
@@ -125,7 +125,6 @@ MIT
 
    [dill]: <https://github.com/joemccann/dillinger>
    [git-repo-url]: <https://github.com/joemccann/dillinger.git>
-   [DIAMOND]: <https://github.com/bbuchfink/diamond>
    [@thomasfuchs]: <http://twitter.com/thomasfuchs>
    [df1]: <http://daringfireball.net/projects/markdown/>
    [markdown-it]: <https://github.com/markdown-it/markdown-it>
