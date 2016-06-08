@@ -33,20 +33,20 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
 ### Execution
 
   - Execute on an in-house cluster
-  - dienghaineiege
+    
+    User first has to download the released Hamond jar package and DIAMOND binary file to the master node of the cluster. Hamond can only accecpt one query file at once, so if user has multiple query files, concatenate them into one file like this:
 
-
-
-```sh
-$ npm i -g gulp
-```
-
-```sh
-$ git clone [git-repo-url] dillinger
-$ cd dillinger
-$ npm i -d
-$ NODE_ENV=production node app
-```
+    ```sh
+    $ cat ~/*.faa >> ~/query.faa
+    ```
+    
+    The query and reference genome files should also be in the master node. To run Hamond, execute like this:
+    
+    ```sh
+    $ hadoop jar ~/Hamond-x.x.jar diamondmapreduce.DiamondMapReduce ~/diamond ~/query.faa ~/reference.faa ~/Hamond.output blastp --sensitive -e 0.00001 -k 1000
+    ```
+    
+    The first argument after the Hamond jar package is the main class name. User then has to give the paths of DIAMOND binary file, query and reference genome files and the output file in order. User has to specify the alignment type (blastp or blastx) as the fifth argument. After that, Hamond can accept all the [DIAMOND alignment options](https://github.com/bbuchfink/diamond#scoring--reporting-options "options").
 
 ### Plugins
 
