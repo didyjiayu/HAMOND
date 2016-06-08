@@ -47,104 +47,21 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
     ```
     
     The first argument after the Hamond jar package is the main class name. User then has to give the paths of DIAMOND binary file, query and reference genome files and the output file in order. User has to specify the alignment type (blastp or blastx) as the fifth argument. After that, Hamond can accept all the [DIAMOND alignment options](https://github.com/bbuchfink/diamond#scoring--reporting-options "options").
+    
+  - Execute on Amazon Web Service
+  
+    Amazon provide Elastic Map Reduce service for user to create a Hadoop cluster with a few clicks and little expense. Hamond is fully compatible with it.
 
-### Plugins
+    User can register on [*EMR*](https://aws.amazon.com/elasticmapreduce/). User first has to go to S3 service to create a storage bucket and upload the Hamond jar package, DIAMOND binary file, query and reference files into it. The in EMR service, user can create a Hadoop cluster (make sure the Hadoop version is higher than 2.4.0) with steps. In steps, user should choose *Custom JAR* and locate the Hamond jar package in S3 bucket. Arguments should be like this:
+    
+    ```sh
+    diamondmapreduce.DiamondMapReduce s3://$yourBucket/diamond s3://yourBucket/query.faa s3://$yourBucket/reference.faa s3://$yourBucket/Hamond.output blastp --sensitive -e 0.00001 -k 1000
+    ```
+    
+    It is similar to execution on in-house cluster, after the alignment type user can give any DIAMOND alignment options.
+    
+    User can find the output file in the S3 bucket. It is possible to add more than one Hamond step during creating the cluster. Make sure to click on *Auto-terminate cluster after the last step is completed*. This option can save the elapsed time hence the expense of the usage.
 
-Dillinger is currently extended with the following plugins
+### License
 
-* Dropbox
-* Github
-* Google Drive
-* OneDrive
-
-Readmes, how to use them in your own application can be found here:
-
-* [plugins/dropbox/README.md] [PlDb]
-* [plugins/github/README.md] [PlGh]
-* [plugins/googledrive/README.md] [PlGd]
-* [plugins/onedrive/README.md] [PlOd]
-
-### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantanously see your updates!
-
-Open your favorite Terminal and run these commands.
-
-First Tab:
-```sh
-$ node app
-```
-
-Second Tab:
-```sh
-$ gulp watch
-```
-
-(optional) Third:
-```sh
-$ karma start
-```
-
-### Docker
-Dillinger is very easy to install and deploy in a Docker container.
-
-By default, the Docker will expose port 80, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
-
-```sh
-cd dillinger
-docker build -t <youruser>/dillinger:latest .
-```
-This will create the dillinger image and pull in the necessary dependencies. Once done, run the Docker and map the port to whatever you wish on your host. In this example, we simply map port 80 of the host to port 80 of the Docker (or whatever port was exposed in the Dockerfile):
-
-```sh
-docker run -d -p 80:80 --restart="always" <youruser>/dillinger:latest
-```
-
-Verify the deployment by navigating to your server address in your preferred browser.
-
-### N|Solid and NGINX
-
-More details coming soon.
-
-#### docker-compose.yml
-
-Change the path for the nginx conf mounting path to your full path, not mine!
-
-### Todos
-
- - Write Tests
- - Rethink Github Save
- - Add Code Comments
- - Add Night Mode
-
-License
-----
-
-MIT
-
-
-**Free Software, Hell Yeah!**
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
-
-
-   [Hadoop]: <https://hadoop.apache.org/>
-   [df1]: <http://daringfireball.net/projects/markdown/>
-   [markdown-it]: <https://github.com/markdown-it/markdown-it>
-   [Ace Editor]: <http://ace.ajax.org>
-   [node.js]: <http://nodejs.org>
-   [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>
-   [keymaster.js]: <https://github.com/madrobby/keymaster>
-   [jQuery]: <http://jquery.com>
-   [@tjholowaychuk]: <http://twitter.com/tjholowaychuk>
-   [express]: <http://expressjs.com>
-   [AngularJS]: <http://angularjs.org>
-   [Gulp]: <http://gulpjs.com>
-
-   [PlDb]: <https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md>
-   [PlGh]:  <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>
-   [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>
-   [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>
+Hamond is an open source application with Apache License Version 2.0.
