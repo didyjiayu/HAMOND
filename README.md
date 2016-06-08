@@ -20,8 +20,8 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
 
   - In-house cluster
     - Linux system
-    - Hadoop-2.x
-    - Java environment 1.7 or high
+    - Hadoop-2.4.0 or higher
+    - Java 1.7 environment or higher
     
   - Amazon Web Service
     - [Elastic Map Reduce](https://aws.amazon.com/elasticmapreduce/ "EMR") service
