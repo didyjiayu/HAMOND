@@ -40,6 +40,12 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
     $ cat ~/*.faa >> ~/query.faa
     ```
     
+    or
+    
+    ```sh
+    $ cat ~/1.faa ~/2.faa ~/3.faa >> ~/query.faa
+    ```
+    
     The query and reference genome files should also be in the master node. To run Hamond, execute like this:
     
     ```sh
@@ -54,7 +60,7 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
 
     User can register on [*EMR*](https://aws.amazon.com/elasticmapreduce/). User first has to go to S3 service to create a storage bucket and upload the Hamond jar package, DIAMOND binary file, query and reference files into it. The in EMR service, user can create a Hadoop cluster (make sure the Hadoop version is higher than 2.4.0) with steps. In steps, user should choose *Custom JAR* and locate the Hamond jar package in S3 bucket. Arguments should be like this:
     
-    ```sh
+    ```code
     diamondmapreduce.DiamondMapReduce s3://$yourBucket/diamond s3://yourBucket/query.faa s3://$yourBucket/reference.faa s3://$yourBucket/Hamond.output blastp --sensitive -e 0.00001 -k 1000
     ```
     
