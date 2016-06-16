@@ -29,7 +29,7 @@ public class CopyFromLocal {
     
     public static void copyFromLocal(Configuration conf, String diamond, String query, String dataBase, String userName) throws IOException {
         FileSystem fs = FileSystem.get(conf);
-        fs.copyFromLocalFile(new Path(dataBase + ".dmnd"), new Path("/user/"+userName+"/Hamond"));
+        fs.moveFromLocalFile(new Path(dataBase + ".dmnd"), new Path("/user/"+userName+"/Hamond"));
         fs.copyFromLocalFile(new Path(query), new Path("/user/"+userName+"/Hamond"));
 //        fs.copyFromLocalFile(new Path(System.getProperty("user.dir")+"/diamond"), new Path(userName));
         fs.copyFromLocalFile(new Path(diamond), new Path("/user/"+userName+"/Hamond"));

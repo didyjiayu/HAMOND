@@ -75,9 +75,6 @@ public class DiamondMapReduce extends Configured implements Tool {
         //copy DIAMOND bin, query and local database file to HDFS
         CopyFromLocal.copyFromLocal(conf, diamond, query, dataBase, userName);
 
-        //remove local database file
-        hamondsidefunctions.RemoveDB.removeDB(dataBase + ".dmnd");
-
         //pass query name and database name to mappers
         conf.set(QUERY, query);
         conf.set(DATABASE, dataBase + ".dmnd");
