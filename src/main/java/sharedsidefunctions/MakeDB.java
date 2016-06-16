@@ -17,6 +17,7 @@
 package sharedsidefunctions;
 
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,7 +28,7 @@ public class MakeDB {
 
     public static void makeDB(String diamond, String dataBase) throws IOException, InterruptedException {
         
-        String command[] = {diamond, "makedb", "--in", dataBase, "-d", dataBase};
+        String command[] = {new File(diamond).getAbsolutePath(), "makedb", "--in", dataBase, "-d", dataBase};
         Process p = Runtime.getRuntime().exec(command);
         p.waitFor();
         
