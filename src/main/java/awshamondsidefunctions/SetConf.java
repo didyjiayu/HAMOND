@@ -30,6 +30,8 @@ public class SetConf {
         conf.set("mapreduce.task.timeout", "36000000");
         conf.set("mapreduce.map.memory.mb", "5632");
         conf.set("mapreduce.reduce.memory.mb", "5632");
+        //set reducer to wait until all mappers are finished
+        conf.set("mapreduce.job.reduce.slowstart.completedmaps", "1.0");
         Logger.getLogger("amazon.emr.metrics").setLevel(Level.OFF);
 
     }

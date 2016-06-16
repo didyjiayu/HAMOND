@@ -66,6 +66,8 @@ public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
         
         //delete all intermediate files
         DeleteIntermediateFiles.deleteFiles(key.toString());
+        
+        context.write(new Text("key"), new Text(key.toString()));
 
     }
 }

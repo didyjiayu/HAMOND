@@ -20,6 +20,7 @@ package diamondmapreduce;
  *
  * @author yujia1986
  */
+import awshamondsidefunctions.AWSDiamondReducer;
 import java.net.URI;
 import java.util.Arrays;
 import org.apache.hadoop.conf.Configuration;
@@ -38,7 +39,6 @@ import sharedsidefunctions.DeleteHDFSFiles;
 import sharedsidefunctions.HadoopUser;
 import sharedsidefunctions.MakeDB;
 import sharedsidefunctions.MakeHamondHDFSdir;
-import hamondsidefunctions.RemoveDB;
 
 public class DiamondMapReduce extends Configured implements Tool {
 
@@ -76,13 +76,14 @@ public class DiamondMapReduce extends Configured implements Tool {
         CopyFromLocal.copyFromLocal(conf, diamond, query, dataBase, userName);
 
         //remove local database file
-        RemoveDB.removeDB(dataBase + ".dmnd");
+        hamondsidefunctions.RemoveDB.removeDB(dataBase + ".dmnd");
 
         //pass query name and database name to mappers
         conf.set(QUERY, query);
         conf.set(DATABASE, dataBase + ".dmnd");
         String[] subArgs = Arrays.copyOfRange(arguments, 4, arguments.length);
         conf.setStrings("DIAMOND-arguments", subArgs);
+        conf.setStrings(OUTPUT, outPut);
 
         //add DIAMOND bin and database into distributed cache
         job.addCacheFile(new URI("/user/" + userName + "/Hamond/diamond"));
@@ -90,7 +91,7 @@ public class DiamondMapReduce extends Configured implements Tool {
 
         //set job input and output paths
         FileInputFormat.addInputPath(job, new Path("/user/" + userName + "/Hamond/" + new Path(query).getName()));
-        FileOutputFormat.setOutputPath(job, new Path("/user/" + userName + "/Hamond/output"));
+        FileOutputFormat.setOutputPath(job, new Path("/user/" + userName + "/Hamond/out"));
 
         //set job driver and mapper
         job.setJarByClass(DiamondMapReduce.class);
@@ -148,6 +149,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         conf.set(OUTPUT, outPut);
         String[] subArgs = Arrays.copyOfRange(arguments, 4, arguments.length);
         conf.setStrings("DIAMOND-arguments", subArgs);
+        conf.setStrings(OUTPUT, outPut);
 
         //add DIAMOND bin and database into distributed cache
         job.addCacheFile(new URI("/user/" + userName + "/Hamond/diamond"));
@@ -155,18 +157,19 @@ public class DiamondMapReduce extends Configured implements Tool {
 
         //set job input and output paths
         FileInputFormat.addInputPath(job, new Path("/user/" + userName + "/Hamond/" + new Path(query).getName()));
-        FileOutputFormat.setOutputPath(job, new Path("/user/" + userName + "/Hamond/output"));
+        FileOutputFormat.setOutputPath(job, new Path("/user/" + userName + "/Hamond/out"));
 
         //set job driver and mapper
         job.setJarByClass(DiamondMapReduce.class);
         job.setMapperClass(DiamondMapper.class);
+        job.setReducerClass(AWSDiamondReducer.class);
 
         //set job input format into customized multilines format
         job.setInputFormatClass(CustomNLineFileInputFormat.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        job.setNumReduceTasks(0);
+        job.setNumReduceTasks(1);
         job.setSpeculativeExecution(false);
 
         return job.waitForCompletion(true) ? 0 : 1;

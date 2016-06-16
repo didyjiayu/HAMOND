@@ -13,7 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-
 package hamondsidefunctions;
 
 import sharedsidefunctions.HadoopUser;
@@ -28,8 +27,7 @@ public class CopyToLocal {
     public static void copyToLocal(String outPut) throws IOException, InterruptedException {
 
         String userName = HadoopUser.getHadoopUser();
-//        String copyCommand[] = {"hadoop", "fs", "-getmerge", userName+"/*.out", System.getProperty("user.dir")+"/"+query+".out"};
-        String copyCommand[] = {"hadoop", "fs", "-getmerge", "/user/" + userName + "/Hamond/*.out", outPut};
+        String copyCommand[] = {"hadoop", "fs", "-getmerge", "/user/" + userName + "/Hamond/output/*.out", outPut};
         Process p = Runtime.getRuntime().exec(copyCommand);
         p.waitFor();
 

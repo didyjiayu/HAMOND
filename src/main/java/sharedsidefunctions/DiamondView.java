@@ -38,7 +38,7 @@ public class DiamondView {
         FileSystem fs = FileSystem.get(conf);
         //process stream copied to HDFS stream
         InputStream in = p2.getInputStream();
-        FSDataOutputStream out = fs.create(new Path("/user/"+hadoopUser + "/Hamond/" + key + ".out"));
+        FSDataOutputStream out = fs.create(new Path("/user/"+hadoopUser + "/Hamond/output/" + key + ".out"));
         IOUtils.copyBytes(in, out, 4096, true);
         p2.waitFor();
     }

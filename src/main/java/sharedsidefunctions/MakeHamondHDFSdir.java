@@ -28,11 +28,15 @@ import org.apache.hadoop.fs.Path;
 public class MakeHamondHDFSdir {
     public static void makedir(Configuration conf, String userName) throws IOException {
         FileSystem fs = FileSystem.get(conf);
-        Path p = new Path("/user/"+userName+"/Hamond");
-        if (fs.exists(p)) {
-            fs.delete(p, true);
+        Path p1 = new Path("/user/"+userName+"/Hamond");
+        if (fs.exists(p1)) {
+            fs.delete(p1, true);
         }
-        fs.mkdirs(p);
+        fs.mkdirs(p1);
+        //make dir for all outputs
+        Path p2 = new Path("/user/"+userName+"/Hamond/output");
+        fs.mkdirs(p2);
+        
         fs.close();
     }
 }
