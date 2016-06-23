@@ -39,6 +39,7 @@ import sharedsidefunctions.DeleteHDFSFiles;
 import sharedsidefunctions.HadoopUser;
 import sharedsidefunctions.MakeDB;
 import sharedsidefunctions.MakeHamondHDFSdir;
+import sharedsidefunctions.SetConf;
 
 public class DiamondMapReduce extends Configured implements Tool {
 
@@ -58,7 +59,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         //set Hadoop configuration
         Job job = Job.getInstance(getConf(), "DIAMOND");
         Configuration conf = job.getConfiguration();
-        hamondsidefunctions.SetConf.setHadoopConf(conf);
+        SetConf.setHadoopConf(conf);
 
         //get user name
         userName = HadoopUser.getHadoopUser();
@@ -100,7 +101,6 @@ public class DiamondMapReduce extends Configured implements Tool {
         job.setMapOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setNumReduceTasks(0);
-        job.setSpeculativeExecution(false);
 
         return job.waitForCompletion(true) ? 0 : 1;
 
@@ -117,7 +117,7 @@ public class DiamondMapReduce extends Configured implements Tool {
         //set Hadoop configuration
         Job job = Job.getInstance(getConf(), "DIAMOND");
         Configuration conf = job.getConfiguration();
-        awshamondsidefunctions.SetConf.setHadoopConf(conf);
+        SetConf.setHadoopConf(conf);
 
         //get user name
         userName = HadoopUser.getHadoopUser();
@@ -167,7 +167,6 @@ public class DiamondMapReduce extends Configured implements Tool {
         job.setMapOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setNumReduceTasks(1);
-        job.setSpeculativeExecution(false);
 
         return job.waitForCompletion(true) ? 0 : 1;
 

@@ -14,7 +14,7 @@
    limitations under the License.
  */
 
-package awshamondsidefunctions;
+package sharedsidefunctions;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.log4j.Level;
