@@ -28,8 +28,10 @@ public class SetConf {
 
     public static void setHadoopConf(Configuration conf) {
         conf.set("mapreduce.task.timeout", "36000000");
-        conf.set("mapreduce.map.memory.mb", "5632");
-        conf.set("mapreduce.reduce.memory.mb", "5632");
+        conf.set("mapreduce.map.memory.mb", "8192");
+        conf.set("mapreduce.reduce.memory.mb", "8192");
+        conf.set("mapreduce.map.java.opts", "-Xmx8192M");
+        conf.set("mapreduce.reduce.java.opts", "-Xmx8192M");
         //set reducer to wait until all mappers are finished
         conf.set("mapreduce.job.reduce.slowstart.completedmaps", "1.0");
         Logger.getLogger("amazon.emr.metrics").setLevel(Level.OFF);
