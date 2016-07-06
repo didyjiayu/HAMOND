@@ -59,10 +59,10 @@ public class DiamondMapper extends Mapper<LongWritable, Text, Text, Text> {
         WriteKeyValueToTemp.write(key.toString(), value.toString());
 
         //use runtime to execute alignment, intermediate binary files are stored in local tmp
-        DiamondAlignment.align(this.diamond, this.localDB, key.toString(), args);
+        DiamondAlignment.align(this.diamond, this.localDB, key.toString(), args, conf);
 
         //view the binary files to tabular output file, view output will be streammized into HDFS
-        DiamondView.view(this.diamond, key.toString(), conf);
+//        DiamondView.view(this.diamond, key.toString(), conf);
         
         //delete all intermediate files
         DeleteIntermediateFiles.deleteFiles(key.toString());

@@ -17,7 +17,7 @@ Hamond is the abbreviation of Hadoop and DIAMOND. :-P
 1.0
 
 ### Download release
-[Hamond-1.0.jar](https://gitlab.com/yujia1986/Hamond/uploads/d6a3652ec5146544cb4959572c0362b8/Hamond-1.0.jar "release")
+[Hamond-1.0.jar](https://gitlab.com/yujia/Hamond/uploads/c25e16295093a9b515be82c54190c25d/Hamond-1.0-SNAPSHOT.jar "release")
 
 ### System requirements
 
