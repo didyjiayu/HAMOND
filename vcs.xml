@@ -6,6 +6,10 @@
           <option name="url" value="git@gitlab.com:yujia/HamondAWS.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="git@gitlab.com:yujia/OrtholugeDB.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="$USER_HOME$/IntelliJ IDEA Projects" />
